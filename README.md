@@ -1,6 +1,6 @@
-# Terraform Cloud Getting Started Guide Example
+# Что это?
 
-This is an example Terraform configuration intended for use with the [Terraform Cloud Getting Started Guide](https://learn.hashicorp.com/terraform/cloud-gettingstarted/tfc_overview).
+Комплект скриптов необходимый для развертывания инфраструктуры OKD в Digital Ocean
 
 ## What will this do?
 
@@ -10,6 +10,4 @@ When you set up a Workspace on Terraform Cloud, you can link to this repository.
 
 ## What are the prerequisites?
 
-You must have an AWS account and provide your AWS Access Key ID and AWS Secret Access Key to Terraform Cloud. Terraform Cloud encrypts and stores variables using [Vault](https://www.vaultproject.io/). For more information on how to store variables in Terraform Cloud, see [our variable documentation](https://www.terraform.io/docs/cloud/workspaces/variables.html).
-
-The values for `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` should be saved as environment variables on your workspace.
+Необходимо указать переменные окружения `DIGITALOCEAN_TOKEN`, `DIGITALOCEAN_ACCESS_TOKEN`
