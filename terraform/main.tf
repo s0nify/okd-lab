@@ -30,7 +30,7 @@ resource "digitalocean_droplet" "okd-terminal" {
   region = "fra1"
   size   = "s-1vcpu-1gb"
   vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-  ssh_keys = [data.digitalocean_ssh_key.terraform]
+  ssh_keys = [digitalocean_ssh_key.terraform]
 }
 
 #resource "digitalocean_droplet" "okd-services" {
