@@ -14,21 +14,29 @@ terraform {
   }
 }
 
-# Необходимо создать проект cloud-okd-lab вручную
-data "digitalocean_project" "cloud-okd-lab" {
-  name = "cloud-okd-lab"
-}
-
 variable "DIGITALOCEAN_TOKEN" {
   type = string
 }
-# Configure the DigitalOcean Provider
+
 provider "digitalocean" {
   token = var.DIGITALOCEAN_TOKEN
 }
 
-data "digitalocean_ssh_key" "terraform" {
-  name = "terraform"
+
+#data "digitalocean_project" "cloud-okd-lab" {
+#  name = "cloud-okd-lab"
+#}
+
+resource "digitalocean_project" "cloud-okd-lab" {
+  name        = "cloud-okd-lab"
+  description = "OKD Cluster Lab"
+  purpose     = "OKD"
+  environment = "Development"
+}
+
+resource "digitalocean_ssh_key" "default" {
+  name       = "Terraform key"
+  public_key = file("/id_rsa.pub")
 }
 
 # 5 USD, 0.008 + 0.05 + 0.12 + 0.12 + 0.12
@@ -38,7 +46,7 @@ resource "digitalocean_droplet" "okd-terminal" {
   region = "fra1"
   size   = "s-1vcpu-1gb"
   vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-  ssh_keys = [data.digitalocean_ssh_key.terraform.id]
+  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
 }
 
 # 40 USD, 0.05
@@ -48,7 +56,7 @@ resource "digitalocean_droplet" "okd-compute-1" {
   region = "fra1"
   size   = "s-4vcpu-8gb"
   vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-  ssh_keys = [data.digitalocean_ssh_key.terraform.id]
+  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
 }
 
 # 40 USD, 0.05
@@ -58,7 +66,7 @@ resource "digitalocean_droplet" "okd-compute-2" {
   region = "fra1"
   size   = "s-4vcpu-8gb"
   vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-  ssh_keys = [data.digitalocean_ssh_key.terraform.id]
+  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
 }
 
 # 80 USD, 0.12
@@ -68,7 +76,7 @@ resource "digitalocean_droplet" "okd-compute-2" {
 #  region = "fra1"
 #  size   = "s-4vcpu-8gb"
 #  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-#  ssh_keys = [data.digitalocean_ssh_key.terraform.id]
+#  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
 #}
 
 # 80 USD, 0.12
@@ -78,7 +86,7 @@ resource "digitalocean_droplet" "okd-compute-2" {
 #  region = "fra1"
 #  size   = "s-4vcpu-8gb"
 #  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-#  ssh_keys = [data.digitalocean_ssh_key.terraform.id]
+#  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
 #}
 
 # 80 USD, 0.12
@@ -88,7 +96,7 @@ resource "digitalocean_droplet" "okd-compute-2" {
 #  region = "fra1"
 #  size   = "m-2vcpu-16gb"
 #  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-#  ssh_keys = [data.digitalocean_ssh_key.terraform.id]
+#  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
 #}
 
 resource "digitalocean_project_resources" "cloud-okd-lab" {
