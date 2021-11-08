@@ -43,6 +43,6 @@ resource "digitalocean_droplet" "okd-terminal" {
 resource "digitalocean_project_resources" "cloud-okd-lab" {
   project = data.digitalocean_project.cloud-okd-lab.id
   resources = [
-    digitalocean_droplet.web.urn
+    digitalocean_droplet.okd-services.urn
   ]
 }
