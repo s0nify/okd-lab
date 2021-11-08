@@ -27,9 +27,11 @@ provider "digitalocean" {
 }
 
 
-#data "digitalocean_project" "cloud-okd-lab" {
-#  name = "cloud-okd-lab"
-#}
+resource "digitalocean_custom_image" "fedora-coreos" {
+  name   = "fedora-coreos"
+  url = "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20211016.3.0/x86_64/fedora-coreos-34.20211016.3.0-digitalocean.x86_64.qcow2.gz"
+  regions = ["fra1"]
+}
 
 
 resource "digitalocean_ssh_key" "default" {
@@ -39,7 +41,7 @@ resource "digitalocean_ssh_key" "default" {
 
 # 5 USD, 0.008 + 0.05 + 0.12 + 0.12 + 0.12
 resource "digitalocean_droplet" "okd-terminal" {
-  image  = "ubuntu-18-04-x64"
+  image  = "digitalocean_custom_image.fedora-coreos.id"
   name   = "okd-terminal"
   region = "fra1"
   size   = "s-1vcpu-1gb"
@@ -49,7 +51,7 @@ resource "digitalocean_droplet" "okd-terminal" {
 
 # 40 USD, 0.05
 resource "digitalocean_droplet" "okd-compute-1" {
-  image  = "ubuntu-18-04-x64"
+  image  = "digitalocean_custom_image.fedora-coreos.id"
   name   = "okd-compute-1"
   region = "fra1"
   size   = "s-4vcpu-8gb"
@@ -59,7 +61,7 @@ resource "digitalocean_droplet" "okd-compute-1" {
 
 # 40 USD, 0.05
 resource "digitalocean_droplet" "okd-compute-2" {
-  image  = "ubuntu-18-04-x64"
+  image  = "digitalocean_custom_image.fedora-coreos.id"
   name   = "okd-compute-2"
   region = "fra1"
   size   = "s-4vcpu-8gb"
@@ -69,7 +71,7 @@ resource "digitalocean_droplet" "okd-compute-2" {
 
 # 80 USD, 0.12
 #resource "digitalocean_droplet" "okd-control-plane-1" {
-#  image  = "ubuntu-18-04-x64"
+#  image  = "digitalocean_custom_image.fedora-coreos.id"
 #  name   = "okd-control-plane-1"
 #  region = "fra1"
 #  size   = "s-4vcpu-8gb"
@@ -79,7 +81,7 @@ resource "digitalocean_droplet" "okd-compute-2" {
 
 # 80 USD, 0.12
 #resource "digitalocean_droplet" "okd-control-plane-2" {
-#  image  = "ubuntu-18-04-x64"
+#  image  = "digitalocean_custom_image.fedora-coreos.id"
 #  name   = "okd-control-plane-2"
 #  region = "fra1"
 #  size   = "s-4vcpu-8gb"
@@ -89,7 +91,7 @@ resource "digitalocean_droplet" "okd-compute-2" {
 
 # 80 USD, 0.12
 #resource "digitalocean_droplet" "okd-control-plane-3" {
-#  image  = "ubuntu-18-04-x64"
+#  image  = "digitalocean_custom_image.fedora-coreos.id"
 #  name   = "okd-control-plane-3"
 #  region = "fra1"
 #  size   = "m-2vcpu-16gb"
