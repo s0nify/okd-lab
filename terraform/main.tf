@@ -77,7 +77,7 @@ resource "openstack_compute_keypair_v2" "ssh" {
   
   # Путь до публичного ключа
   # В примере он находится в одной директории с main.tf
-  public_key = var.MCS_PASSWORD
+  public_key = var.SSH_KEY
 }
 
 resource "openstack_compute_secgroup_v2" "rules" {
