@@ -7,9 +7,10 @@ terraform {
   }
 }
 
-# Set the variable value in *.tfvars file
-# or using -var="do_token=..." CLI option
-#variable "do_token" {}
+# Необходимо создать проект cloud-okd-lab вручную
+data "digitalocean_project" "cloud-okd-lab" {
+  name = "cloud-okd-lab"
+}
 
 variable "DIGITALOCEAN_TOKEN" {
   type = string
