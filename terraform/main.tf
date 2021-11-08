@@ -18,6 +18,10 @@ variable "DIGITALOCEAN_TOKEN" {
   type = string
 }
 
+variable "SSH_KEY" {
+  type = string
+}
+
 provider "digitalocean" {
   token = var.DIGITALOCEAN_TOKEN
 }
@@ -36,7 +40,7 @@ resource "digitalocean_project" "cloud-okd-lab" {
 
 resource "digitalocean_ssh_key" "default" {
   name       = "Terraform key"
-  public_key = file("/id_rsa.pub")
+  public_key = var.SSH_KEY
 }
 
 # 5 USD, 0.008 + 0.05 + 0.12 + 0.12 + 0.12
