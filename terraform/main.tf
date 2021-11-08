@@ -1,112 +1,98 @@
-# TODO:
-# 1) Вывести тарифы в отдельную переменную для гибкой конфигурации и легкого скейлинга
-# 2) Научиться делать вкусный смузи
-#
-#
-#
-
 terraform {
-  required_providers {
-    digitalocean = {
-      source = "digitalocean/digitalocean"
-      version = "~> 2.0"
+    required_providers {
+        openstack = {
+            source = "terraform-provider-openstack/openstack"
+            version = "1.33.0"
+        }
+        
+        mcs = {
+            source = "MailRuCloudSolutions/mcs"
+            version = "~> 0.4.2"
+        }
     }
+}
+
+provider "openstack" {
+    # Your user account.
+    user_name = "givemeparachute@gmail.com"
+
+    # The password of the account
+    password = "YOUR_PASSWORD"
+
+    # The tenant token can be taken from the project Settings tab - > API keys.
+    # Project ID will be our token.
+    tenant_id = "da50a396acf14358a85377d17e46b613"
+
+    # The indicator of the location of users.
+    user_domain_id = "users"
+
+    # API endpoint
+    # Terraform will use this address to access the VK Cloud Solutions api.
+    auth_url = "https://infra.mail.ru:35357/v3/"
+
+    # use octavia to manage load balancers
+    use_octavia = true
+    
+    # Region name
+    region = "RegionOne"
+}
+
+provider "mcs" {
+    # Your user account.
+    username = "givemeparachute@gmail.com"
+
+    # The password of the account
+    password = "YOUR_PASSWORD"
+
+    # The tenant token can be taken from the project Settings tab - > API keys.
+    # Project ID will be our token.
+    project_id = "da50a396acf14358a85377d17e46b613"
+    
+    # Region name
+    region = "RegionOne"
+}
+
+resource "openstack_networking_network_v2" "network_1" {
+  name           = "network_1"
+  admin_state_up = "true"
+}
+
+resource "openstack_networking_subnet_v2" "subnet_1" {
+  name       = "subnet_1"
+  network_id = "${openstack_networking_network_v2.network_1.id}"
+  cidr       = "192.168.199.0/24"
+  ip_version = 4
+}
+
+resource "openstack_compute_secgroup_v2" "secgroup_1" {
+  name        = "secgroup_1"
+  description = "a security group"
+
+  rule {
+    from_port   = 22
+    to_port     = 22
+    ip_protocol = "tcp"
+    cidr        = "0.0.0.0/0"
   }
 }
 
-variable "DIGITALOCEAN_TOKEN" {
-  type = string
+resource "openstack_networking_port_v2" "port_1" {
+  name               = "port_1"
+  network_id         = "${openstack_networking_network_v2.network_1.id}"
+  admin_state_up     = "true"
+  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
+
+  fixed_ip {
+    "subnet_id"  = "${openstack_networking_subnet_v2.subnet_1.id}"
+    "ip_address" = "192.168.199.10"
+  }
 }
 
-variable "SSH_KEY" {
-  type = string
-}
+resource "openstack_compute_instance_v2" "instance_1" {
+  name            = "instance_1"
+  security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
 
-provider "digitalocean" {
-  token = var.DIGITALOCEAN_TOKEN
-}
-
-
-resource "digitalocean_custom_image" "fedora-coreos" {
-  name   = "fedora-coreos"
-  url = "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20211016.3.0/x86_64/fedora-coreos-34.20211016.3.0-digitalocean.x86_64.qcow2.gz"
-  regions = ["fra1"]
-}
-
-
-resource "digitalocean_ssh_key" "default" {
-  name       = "Terraform key"
-  public_key = var.SSH_KEY
-}
-
-# 5 USD, 0.008 + 0.05 + 0.12 + 0.12 + 0.12
-resource "digitalocean_droplet" "okd-terminal" {
-  image  = "digitalocean_custom_image.fedora-coreos.id"
-  name   = "okd-terminal"
-  region = "fra1"
-  size   = "s-1vcpu-1gb"
-  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
-}
-
-# 40 USD, 0.05
-resource "digitalocean_droplet" "okd-compute-1" {
-  image  = "digitalocean_custom_image.fedora-coreos.id"
-  name   = "okd-compute-1"
-  region = "fra1"
-  size   = "s-4vcpu-8gb"
-  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
-}
-
-# 40 USD, 0.05
-resource "digitalocean_droplet" "okd-compute-2" {
-  image  = "digitalocean_custom_image.fedora-coreos.id"
-  name   = "okd-compute-2"
-  region = "fra1"
-  size   = "s-4vcpu-8gb"
-  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
-}
-
-# 80 USD, 0.12
-#resource "digitalocean_droplet" "okd-control-plane-1" {
-#  image  = "digitalocean_custom_image.fedora-coreos.id"
-#  name   = "okd-control-plane-1"
-#  region = "fra1"
-#  size   = "s-4vcpu-8gb"
-#  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-#  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
-#}
-
-# 80 USD, 0.12
-#resource "digitalocean_droplet" "okd-control-plane-2" {
-#  image  = "digitalocean_custom_image.fedora-coreos.id"
-#  name   = "okd-control-plane-2"
-#  region = "fra1"
-#  size   = "s-4vcpu-8gb"
-#  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-#  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
-#}
-
-# 80 USD, 0.12
-#resource "digitalocean_droplet" "okd-control-plane-3" {
-#  image  = "digitalocean_custom_image.fedora-coreos.id"
-#  name   = "okd-control-plane-3"
-#  region = "fra1"
-#  size   = "m-2vcpu-16gb"
-#  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
-#  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
-#}
-
-resource "digitalocean_project" "cloud-okd-lab" {
-  name        = "cloud-okd-lab"
-  description = "OKD Cluster Lab"
-  purpose     = "OKD"
-  environment = "Development"
-  resources = [
-    digitalocean_droplet.okd-terminal.urn,
-	digitalocean_droplet.okd-compute-1.urn,
-	digitalocean_droplet.okd-compute-2.urn
-  ]
+  network {
+    port = "${openstack_networking_port_v2.port_1.id}"
+  }
 }
