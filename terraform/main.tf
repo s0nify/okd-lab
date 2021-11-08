@@ -27,17 +27,6 @@ provider "digitalocean" {
 }
 
 
-#data "digitalocean_project" "cloud-okd-lab" {
-#  name = "cloud-okd-lab"
-#}
-
-resource "digitalocean_project" "cloud-okd-lab" {
-  name        = "cloud-okd-lab"
-  description = "OKD Cluster Lab"
-  purpose     = "OKD"
-  environment = "Development"
-}
-
 resource "digitalocean_ssh_key" "default" {
   name       = "Terraform key"
   public_key = var.SSH_KEY
@@ -105,6 +94,18 @@ resource "digitalocean_droplet" "okd-compute-2" {
 
 resource "digitalocean_project_resources" "cloud-okd-lab" {
   project = data.digitalocean_project.cloud-okd-lab.id
+  resources = [
+    digitalocean_droplet.okd-terminal.urn,
+	digitalocean_droplet.okd-compute-1.urn,
+	digitalocean_droplet.okd-compute-2.urn
+  ]
+}
+
+resource "digitalocean_project" "cloud-okd-lab" {
+  name        = "cloud-okd-lab"
+  description = "OKD Cluster Lab"
+  purpose     = "OKD"
+  environment = "Development"
   resources = [
     digitalocean_droplet.okd-terminal.urn,
 	digitalocean_droplet.okd-compute-1.urn,
