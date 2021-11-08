@@ -27,6 +27,11 @@ provider "digitalocean" {
 }
 
 
+#data "digitalocean_project" "cloud-okd-lab" {
+#  name = "cloud-okd-lab"
+#}
+
+
 resource "digitalocean_ssh_key" "default" {
   name       = "Terraform key"
   public_key = var.SSH_KEY
@@ -91,15 +96,6 @@ resource "digitalocean_droplet" "okd-compute-2" {
 #  vpc_uuid = "4a6f166a-ebaa-48d9-bd31-29e49c678b71"
 #  ssh_keys = [digitalocean_ssh_key.default.fingerprint]
 #}
-
-resource "digitalocean_project_resources" "cloud-okd-lab" {
-  project = data.digitalocean_project.cloud-okd-lab.id
-  resources = [
-    digitalocean_droplet.okd-terminal.urn,
-	digitalocean_droplet.okd-compute-1.urn,
-	digitalocean_droplet.okd-compute-2.urn
-  ]
-}
 
 resource "digitalocean_project" "cloud-okd-lab" {
   name        = "cloud-okd-lab"
