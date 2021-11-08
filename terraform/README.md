@@ -10,4 +10,6 @@ When you set up a Workspace on Terraform Cloud, you can link to this repository.
 
 ## What are the prerequisites?
 
+Со стороны DO необходимо добавить публичный ключ с названием terraform.
+
 Необходимо указать переменные окружения `DIGITALOCEAN_TOKEN`, `DIGITALOCEAN_ACCESS_TOKEN`
