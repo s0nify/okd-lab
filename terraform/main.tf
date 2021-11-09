@@ -69,14 +69,15 @@ provider "mcs" {
     region = "RegionOne"
 }
 
+resource "openstack_images_image_v2" "fedoracore" {
+  name             = "Fedora CoreOS 34.20211016.3.0-openstack"
+  image_source_url = "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20211016.3.0/x86_64/fedora-coreos-34.20211016.3.0-openstack.x86_64.qcow2.xz"
+  container_format = "ovf"
+  disk_format      = "qcow2"
+}
+
 resource "openstack_compute_keypair_v2" "ssh" {
-  # Название ssh ключа,
-  # Данный ключ будет отображаться в разделе
-  # Облачные вычисления -> Ключевые пары
   name = "terraform_ssh_key"
-  
-  # Путь до публичного ключа
-  # В примере он находится в одной директории с main.tf
   public_key = var.SSH_KEY
 }
 
@@ -144,22 +145,15 @@ resource "openstack_networking_port_v2" "port_1" {
 }
 
 resource "openstack_blockstorage_volume_v2" "volume" {
-  # Название диска
-  name = "storage"
-  
-  # Тип создаваемого диска
+  name = "okd-services-disk"
   volume_type = "ko1-ssd"
-  
-  # Размер диска
   size = "50"
-
-  # uuid индикатор образа, в примере используется Ubuntu-18.04-201910
-  image_id = "cd733849-4922-4104-a280-9ea2c3145417"
+  image_id = openstack_images_image_v2.fedoracore.id
 }
 
 resource "openstack_compute_instance_v2" "instance" {
   # Название создаваемой ВМ
-  name = "terraform"
+  name = "okd-services"
 
   # Имя и uuid образа с ОС
   image_name = "Ubuntu-18.04-201910"
