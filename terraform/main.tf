@@ -104,12 +104,12 @@ resource "openstack_compute_secgroup_v2" "rules" {
 }
 ######################################################
 resource "openstack_networking_network_v2" "network_1" {
-  name           = "int-okd-lab"
+  name           = "int-okd-lab-1"
   admin_state_up = "true"
 }
 
 resource "openstack_networking_subnet_v2" "subnet_1" {
-  name       = "sub-okd-lab"
+  name       = "sub-okd-lab-1"
   network_id = "${openstack_networking_network_v2.network_1.id}"
   cidr       = "192.168.199.0/24"
   ip_version = 4
