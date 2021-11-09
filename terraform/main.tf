@@ -104,11 +104,6 @@ resource "openstack_compute_secgroup_v2" "rules" {
   }
 }
 
-
-module "servers" {
-  source = "./okd-services"
-}
-
 resource "openstack_networking_network_v2" "network_1" {
   name           = "int-okd-lab-1"
   admin_state_up = "true"
