@@ -1,20 +1,3 @@
-variable "MCS_PASSWORD" {
-  type = string
-}
-
-variable "MCS_USERNAME" {
-  type = string
-}
-
-variable "MCS_PROJECT_ID" {
-  type = string
-}
-
-
-variable "SSH_KEY" {
-  type = string
-}
-
 terraform {
     required_providers {
         openstack = {
@@ -116,44 +99,43 @@ resource "openstack_networking_port_v2" "port_1" {
   }
 }
 
-resource "openstack_blockstorage_volume_v2" "volume" {
-  name = "okd-services-disk"
-  volume_type = "ko1-ssd"
-  size = "50"
-  image_id = openstack_images_image_v2.fedoracore.id
-}
+#resource "openstack_blockstorage_volume_v2" "volume" {
+# name = "okd-services-disk"
+# volume_type = "ko1-ssd"
+#  size = "50"
+#  image_id = openstack_images_image_v2.fedoracore.id
+#}
 
 resource "openstack_compute_instance_v2" "instance" {
-  # Название создаваемой ВМ
-  name = "okd-services"
-
-  # Имя и uuid образа с ОС
-  #image_name = "Ubuntu-18.04-201910"
-  #image_id = "cd733849-4922-4104-a280-9ea2c3145417"
-  
-  # Конфигурация инстанса
+  name = worker-${count.index+1}
+  count = var.number_of_workers
   flavor_name = "Basic-1-1-10"
-
-  # Публичный ключ для доступа
   key_pair = openstack_compute_keypair_v2.ssh.name
-
-  # Указываем, что при создании использовать config drive
-  # Без этой опции ВМ не будет создана корректно в сетях без DHCP
   config_drive = true
-
+  image_name = openstack_images_image_v2.fedoracore
   security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
 
-  network {
-    port = "${openstack_networking_port_v2.port_1.id}"
-  }
+#  network {
+#    port = "${openstack_networking_port_v2.port_1.id}"
+#  }
   
-  # Блочное устройство
-  block_device {
-    uuid = openstack_blockstorage_volume_v2.volume.id
-    boot_index = 0
-    source_type = "volume"
-    destination_type = "volume"
-    delete_on_termination = false
-  }
+#  block_device {
+#    uuid = openstack_blockstorage_volume_v2.volume.id
+#    boot_index = 0
+#   source_type = "volume"
+#    destination_type = "volume"
+#    delete_on_termination = false
+#  }
 }
 
+
+# Создание inventory для Ansible
+resource "local_file" "hosts_cfg" {
+  content = templatefile("${path.module}/templates/hosts.tpl",
+    {
+      kafka_processors = aws_instance.kafka_processor.*.public_ip
+      test_clients = aws_instance.test_client.*.public_ip
+    }
+  )
+  filename = "../ansible/inventory/hosts.cfg"
+}
