@@ -131,7 +131,8 @@ resource "openstack_compute_instance_v2" "instance" {
 
 # Создание inventory для Ansible
 resource "local_file" "hosts_cfg" {
-  content = templatefile("${path.module}/templates/hosts.tpl",
+#  content = templatefile("${path.module}/templates/hosts.tpl",
+   content = templatefile("./templates/hosts.tpl",
     {
       masters = openstack_compute_instance_v2.instance.*.public_ip
     }
