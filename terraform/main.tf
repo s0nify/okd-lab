@@ -39,48 +39,14 @@ resource "openstack_networking_network_v2" "okd-network" {
   admin_state_up = "true"
 }
 
-resource "openstack_networking_subnet_v2" "okd-subnet" {
-  name       = "okd-subnet"
-  network_id = "${openstack_networking_network_v2.okd-network.id}"
-  cidr       = "192.168.199.0/24"
-  ip_version = 4
+resource "openstack_networking_subnetpool_v2" "okd-subnetpool" {
+  name     = "okd-subnetpool"
+  prefixes = ["192.168.199.0/24"]
 }
 
-resource "openstack_networking_port_v2" "okd-master-port" {
-  count = 5
-  name           = "okd-master-port-${count.index}"
-  network_id         = "${openstack_networking_network_v2.okd-network.id}"
-  admin_state_up     = "true"
-#  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
-
-   fixed_ip = [
-	  {
-		ip_address = 192.168.199.10
-		subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
-	  },
-	  {
-		ip_address = 192.168.199.11
-		subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
-	  },
-	  {
-		ip_address = 192.168.199.12
-		subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
-	  },
-	  {
-		ip_address = 192.168.199.13
-		subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
-	  },
-	  {
-		ip_address = 192.168.199.14
-		subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
-	  },
-	  {
-		ip_address = 192.168.199.15
-		subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
-	  },
-	  {
-		ip_address = 192.168.199.16
-		subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
-	  }
-  ]
+resource "openstack_networking_subnet_v2" "okd-subnet" {
+  name          = "subnet_1"
+  cidr          = "192.168.199.0/24"
+  network_id    = "${openstack_networking_network_v2.okd-network.id}"
+  subnetpool_id = "${openstack_networking_subnetpool_v2.okd-subnetpool.id}"
 }
