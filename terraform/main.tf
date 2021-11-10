@@ -52,12 +52,10 @@ resource "openstack_networking_subnet_v2" "okd-subnet" {
 }
 
 resource "openstack_compute_instance_v2" "master" {
-  name            = "master-${count.index+4}"
+  name            = "master-${count.index+1}"
   count           = var.number_of_masters
   flavor_name     = "Basic-1-1-10"
-#  key_pair        = openstack_compute_keypair_v2.ssh.name
   config_drive    = true
-#  image_name      = openstack_images_image_v2.fedoracore.name
   image_id = "cd733849-4922-4104-a280-9ea2c3145417"
 
   network {
