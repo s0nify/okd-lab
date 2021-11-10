@@ -104,6 +104,9 @@ resource "openstack_networking_port_v2" "okd-worker-port" {
   no_fixed_ip    = true
   dns_name = "worker-${count.index+1}.okd.lab"
   security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
+  depends_on = [
+    openstack_networking_subnet_v2.subnet_1,
+  ]
 }
 
 resource "openstack_networking_port_v2" "okd-master-port" {
@@ -114,6 +117,9 @@ resource "openstack_networking_port_v2" "okd-master-port" {
   no_fixed_ip    = true
   dns_name = "master-${count.index+1}.okd.lab"
   security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
+  depends_on = [
+    openstack_networking_subnet_v2.subnet_1,
+  ]
 }
 
 
