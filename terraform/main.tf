@@ -89,7 +89,7 @@ resource "openstack_compute_secgroup_v2" "secgroup_1" {
 
 resource "openstack_networking_port_v2" "port" {
   name = "port-${count.index+1}"
-  count = "${var.number_of_workers + var.number_of_workers}"  
+  count = 10
   
   network_id         = "${openstack_networking_network_v2.network_1.id}"
   admin_state_up     = "true"
