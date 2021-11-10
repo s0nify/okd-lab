@@ -107,7 +107,7 @@ resource "openstack_networking_port_v2" "port_1" {
 #}
 
 resource "openstack_compute_instance_v2" "instance" {
-  name = worker-${count.index+1}
+  name = "worker-${count.index+1}"
   count = var.number_of_workers
   flavor_name = "Basic-1-1-10"
   key_pair = openstack_compute_keypair_v2.ssh.name
