@@ -61,7 +61,7 @@ resource "openstack_compute_instance_v2" "master" {
   image_id = "cd733849-4922-4104-a280-9ea2c3145417"
 
   network {
-    name = "${openstack_networking_subnetpool_v2.okd-subnetpool.name}"
+    name = "${openstack_networking_network_v2.okd-network.name}"
 #	fixed_ip_v4 = "192.168.199.${9+1}"
 #    port        = "${openstack_networking_port_v2.okd-master-port.*.id[count.index]}"
   }
