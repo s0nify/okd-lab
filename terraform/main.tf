@@ -52,7 +52,8 @@ resource "openstack_networking_subnet_v2" "okd-subnet" {
 }
 
 resource "openstack_networking_port_v2" "port_1" {
-  name            = "master-${count.index+1}"
+  count          = 5
+  name           = "master-${count.index+1}"
   network_id     = "${openstack_networking_network_v2.okd-network.id}"
   admin_state_up = "true"
 }
