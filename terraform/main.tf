@@ -29,12 +29,12 @@ provider "mcs" {
     region = "RegionOne"
 }
 
-#resource "openstack_images_image_v2" "fedoracore" {
-#  name             = "Fedora CoreOS 34.20211016.3.0-openstack"
-#  image_source_url = "https://repo.hb.bizmrg.com/fedora-coreos-34.20211031.3.0-openstack.x86_64.qcow2"
-#  container_format = "bare"
-#  disk_format      = "raw"
-#}
+resource "openstack_images_image_v2" "fedoracore" {
+  name             = "Fedora CoreOS 34.20211016.3.0-openstack"
+  image_source_url = "https://repo.hb.bizmrg.com/fedora-coreos-34.20211031.3.0-openstack.x86_64.qcow2"
+  container_format = "bare"
+  disk_format      = "raw"
+}
 
 resource "openstack_compute_keypair_v2" "ssh" {
   name = "terraform_ssh_key"
