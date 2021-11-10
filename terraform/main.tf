@@ -133,9 +133,8 @@ resource "openstack_compute_instance_v2" "instance" {
 resource "local_file" "hosts_cfg" {
   content = templatefile("${path.module}/templates/hosts.tpl",
     {
-      kafka_processors = aws_instance.kafka_processor.*.public_ip
-      test_clients = aws_instance.test_client.*.public_ip
+      master = openstack_compute_instance_v2.instance.*.public_ip
     }
   )
-  filename = "../ansible/inventory/hosts.cfg"
+  filename = "hosts.cfg"
 }
