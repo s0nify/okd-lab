@@ -29,10 +29,10 @@ provider "mcs" {
     region = "RegionOne"
 }
 
-resource "openstack_compute_keypair_v2" "ssh" {
-  name = "terraform_ssh_key"
-  public_key = var.SSH_KEY
-}
+#resource "openstack_compute_keypair_v2" "ssh" {
+# name = "terraform_ssh_key"
+#  public_key = var.SSH_KEY
+#}
 
 resource "openstack_networking_network_v2" "okd-network" {
   name           = "okd-network"
@@ -49,4 +49,20 @@ resource "openstack_networking_subnet_v2" "okd-subnet" {
   cidr          = "192.168.199.0/24"
   network_id    = "${openstack_networking_network_v2.okd-network.id}"
   subnetpool_id = "${openstack_networking_subnetpool_v2.okd-subnetpool.id}"
+}
+
+resource "openstack_compute_instance_v2" "master" {
+  name            = "master-${count.index+1}"
+  count           = var.number_of_masters
+  flavor_name     = "Basic-1-1-10"
+  key_pair        = openstack_compute_keypair_v2.ssh.name
+  config_drive    = true
+#  image_name      = openstack_images_image_v2.fedoracore.name
+  image_id = "cd733849-4922-4104-a280-9ea2c3145417"
+
+  network {
+    name = "${openstack_networking_network_v2.okd-subnetpool.name}"
+#	fixed_ip_v4 = "192.168.199.${9+1}"
+#    port        = "${openstack_networking_port_v2.okd-master-port.*.id[count.index]}"
+  }
 }
