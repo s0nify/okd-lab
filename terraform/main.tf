@@ -105,3 +105,7 @@ resource "openstack_networking_port_v2" "port" {
 #  size = "50"
 #  image_id = openstack_images_image_v2.fedoracore.id
 #}
+
+output "path_debug" {
+  value = "${var.number_of_workers+var.number_of_workers}"
+}
