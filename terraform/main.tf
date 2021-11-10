@@ -128,14 +128,18 @@ resource "openstack_compute_instance_v2" "instance" {
 #  }
 }
 
+output "path_debug" {
+  value = "${path.module}/templates/hosts.tpl"
+}
+#
 
 # Создание inventory для Ansible
-resource "local_file" "hosts_cfg" {
+#resource "local_file" "hosts_cfg" {
 #  content = templatefile("${path.module}/templates/hosts.tpl",
-   content = templatefile("/terraform/templates/hosts.tpl",
-    {
-      masters = openstack_compute_instance_v2.instance.*.public_ip
-    }
-  )
-  filename = "hosts.cfg"
-}
+#   content = templatefile("/terraform/templates/hosts.tpl",
+#    {
+#      masters = openstack_compute_instance_v2.instance.*.public_ip
+#    }
+#  )
+#  filename = "hosts.cfg"
+#}
