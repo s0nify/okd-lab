@@ -7,7 +7,7 @@ variable "SSH_KEY" {}
 # Переменные окружения параметров кластера
 
 variable "number_of_masters" {
-  default = 3
+  default = 4
 }
 
 variable "number_of_workers" {
