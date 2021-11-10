@@ -52,7 +52,7 @@ resource "openstack_networking_subnet_v2" "okd-subnet" {
 }
 
 resource "openstack_compute_instance_v2" "master" {
-  name            = "master-${count.index+1}"
+  name            = "master-${count.index+4}"
   count           = var.number_of_masters
   flavor_name     = "Basic-1-1-10"
 #  key_pair        = openstack_compute_keypair_v2.ssh.name
