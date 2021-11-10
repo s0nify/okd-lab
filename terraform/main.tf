@@ -1,3 +1,34 @@
+terraform {
+    required_providers {
+        openstack = {
+            source = "terraform-provider-openstack/openstack"
+            version = "1.33.0"
+        }
+        
+        mcs = {
+            source = "MailRuCloudSolutions/mcs"
+            version = "~> 0.4.2"
+        }
+    }
+}
+
+provider "openstack" {
+    user_name = var.MCS_USERNAME
+    password = var.MCS_PASSWORD
+    tenant_id = var.MCS_PROJECT_ID
+    user_domain_id = "users"
+    auth_url = "https://infra.mail.ru:35357/v3/"
+    use_octavia = true
+    region = "RegionOne"
+}
+
+provider "mcs" {
+    username = "givemeparachute@gmail.com"
+    password = "YOUR_PASSWORD"
+    project_id = "da50a396acf14358a85377d17e46b613"
+    region = "RegionOne"
+}
+
 resource "openstack_images_image_v2" "fedoracore" {
   name             = "Fedora CoreOS 34.20211016.3.0-openstack"
   image_source_url = "https://repo.hb.bizmrg.com/fedora-coreos-34.20211031.3.0-openstack.x86_64.qcow2"
