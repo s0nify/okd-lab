@@ -136,9 +136,9 @@ resource "openstack_compute_instance_v2" "master" {
   config_drive    = true
   image_name      = openstack_images_image_v2.fedoracore.name
   security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
-  no_fixed_ip     = true
   network {
     port     = "${openstack_networking_port_v2.port.*.id[count.index]}"
+    no_fixed_ip     = true
   }
 
 }
