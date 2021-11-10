@@ -48,12 +48,12 @@ resource "openstack_networking_subnet_v2" "okd-subnet" {
 
 resource "openstack_networking_port_v2" "okd-master-port" {
   name           = "okd-master-port-${count.index}"
-  network_id         = "${openstack_networking_network_v2.network_1.id}"
+  network_id         = "${openstack_networking_network_v2.okd-network.id}"
   admin_state_up     = "true"
-  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
+#  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
 
   fixed_ip {
-    subnet_id  = "${openstack_networking_subnet_v2.subnet_1.id}"
+    subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
     ip_address = [
 	"192.168.199.10",
 	"192.168.199.11",
