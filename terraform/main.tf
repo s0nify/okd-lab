@@ -12,11 +12,6 @@ terraform {
     }
 }
 
-resource "openstack_compute_keypair_v2" "ssh" {
-  name = "terraform_ssh_key"
-  public_key = var.SSH_KEY
-}
-
 provider "openstack" {
     user_name = var.MCS_USERNAME
     password = var.MCS_PASSWORD
@@ -32,6 +27,11 @@ provider "mcs" {
     password = "YOUR_PASSWORD"
     project_id = "da50a396acf14358a85377d17e46b613"
     region = "RegionOne"
+}
+
+resource "openstack_compute_keypair_v2" "ssh" {
+  name = "terraform_ssh_key"
+  public_key = var.SSH_KEY
 }
 
 resource "openstack_networking_network_v2" "okd-network" {
