@@ -72,7 +72,7 @@ provider "mcs" {
 resource "openstack_images_image_v2" "fedoracore" {
   name             = "Fedora CoreOS 34.20211016.3.0-openstack"
   image_source_url = "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20211016.3.0/x86_64/fedora-coreos-34.20211016.3.0-openstack.x86_64.qcow2.xz"
-  container_format = "bare"
+  container_format = "ami"
   disk_format      = "qcow2"
 }
 
@@ -151,8 +151,8 @@ resource "openstack_compute_instance_v2" "instance" {
   name = "okd-services"
 
   # Имя и uuid образа с ОС
-  image_name = "Ubuntu-18.04-201910"
-  image_id = "cd733849-4922-4104-a280-9ea2c3145417"
+  #image_name = "Ubuntu-18.04-201910"
+  #image_id = "cd733849-4922-4104-a280-9ea2c3145417"
   
   # Конфигурация инстанса
   flavor_name = "Basic-1-1-10"
@@ -179,3 +179,4 @@ resource "openstack_compute_instance_v2" "instance" {
     delete_on_termination = false
   }
 }
+
