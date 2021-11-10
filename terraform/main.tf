@@ -71,7 +71,7 @@ provider "mcs" {
 
 resource "openstack_images_image_v2" "fedoracore" {
   name             = "Fedora CoreOS 34.20211016.3.0-openstack"
-  image_source_url = "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20211031.3.0/x86_64/fedora-coreos-34.20211031.3.0-metal.x86_64.raw.xz"
+  image_source_url = "https://repo.hb.bizmrg.com/fedora-coreos-34.20211031.3.0-openstack.x86_64.qcow2"
   container_format = "bare"
   disk_format      = "raw"
 }
