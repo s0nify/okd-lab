@@ -53,15 +53,34 @@ resource "openstack_networking_port_v2" "okd-master-port" {
   admin_state_up     = "true"
 #  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
 
-  fixed_ip {
+  fixed_ip [
+  {
+    ip_address = 192.168.199.10
     subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
-    ip_address = [
-	"192.168.199.10",
-	"192.168.199.11",
-	"192.168.199.12",
-	"192.168.199.13",
-	"192.168.199.14",
-	"192.168.199.15",
-	]
-  }
+  },
+  {
+    ip_address = 192.168.199.11
+    subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
+  },
+  {
+    ip_address = 192.168.199.12
+    subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
+  },
+  {
+    ip_address = 192.168.199.13
+    subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
+  },
+  {
+    ip_address = 192.168.199.14
+    subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
+  },
+  {
+    ip_address = 192.168.199.15
+    subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
+  },
+  {
+    ip_address = 192.168.199.16
+    subnet_id  = "${openstack_networking_subnet_v2.okd-subnet.id}"
+  },  
+  ]
 }
