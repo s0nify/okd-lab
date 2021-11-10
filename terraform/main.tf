@@ -129,20 +129,19 @@ resource "openstack_compute_instance_v2" "worker" {
 }
 
 resource "openstack_compute_instance_v2" "master" {
-  name = "master-${count.index+1}"
-  count = var.number_of_masters
-  flavor_name = "Basic-1-1-10"
-  key_pair = openstack_compute_keypair_v2.ssh.name
-  config_drive = true
-  image_name = openstack_images_image_v2.fedoracore.name
+  name            = "master-${count.index+1}"
+  count           = var.number_of_masters
+  flavor_name     = "Basic-1-1-10"
+  key_pair        = openstack_compute_keypair_v2.ssh.name
+  config_drive    = true
+  image_name      = openstack_images_image_v2.fedoracore.name
   security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
-
+  no_fixed_ip     = true
   network {
-    port = "${openstack_networking_port_v2.port.*.id[count.index]}"
+    port     = "${openstack_networking_port_v2.port.*.id[count.index]}"
   }
 
 }
-
 
 output "path_debug" {
   value = "${path.module}/templates/hosts.tpl"
