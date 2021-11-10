@@ -112,7 +112,7 @@ resource "openstack_compute_instance_v2" "instance" {
   flavor_name = "Basic-1-1-10"
   key_pair = openstack_compute_keypair_v2.ssh.name
   config_drive = true
-  image_name = openstack_images_image_v2.fedoracore
+  image_name = openstack_images_image_v2.fedoracore.name
   security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
 
 #  network {
