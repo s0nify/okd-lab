@@ -133,7 +133,7 @@ resource "openstack_compute_instance_v2" "instance" {
 resource "local_file" "hosts_cfg" {
   content = templatefile("${path.module}/templates/hosts.tpl",
     {
-      master = openstack_compute_instance_v2.instance.*.public_ip
+      masters = openstack_compute_instance_v2.instance.*.public_ip
     }
   )
   filename = "hosts.cfg"
