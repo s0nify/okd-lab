@@ -71,9 +71,9 @@ provider "mcs" {
 
 resource "openstack_images_image_v2" "fedoracore" {
   name             = "Fedora CoreOS 34.20211016.3.0-openstack"
-  image_source_url = "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20211016.3.0/x86_64/fedora-coreos-34.20211016.3.0-openstack.x86_64.qcow2.xz"
-  container_format = "ami"
-  disk_format      = "qcow2"
+  image_source_url = "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/34.20211031.3.0/x86_64/fedora-coreos-34.20211031.3.0-metal.x86_64.raw.xz"
+  container_format = "bare"
+  disk_format      = "raw"
 }
 
 resource "openstack_compute_keypair_v2" "ssh" {
