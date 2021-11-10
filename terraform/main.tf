@@ -96,18 +96,18 @@ resource "openstack_compute_secgroup_v2" "secgroup_1" {
 #  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
 #}
 
-resource "openstack_networking_port_v2" "okd-worker-port" {
-  count          = var.number_of_workers
-  name           = "okd-worker-port_${count.index}"
-  network_id         = "${openstack_networking_network_v2.network_1.id}"
-  admin_state_up = true
-  no_fixed_ip    = true
-  dns_name = "worker-${count.index+1}.okd.lab"
-  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
-  depends_on = [
-    openstack_networking_subnet_v2.subnet_1,
-  ]
-}
+#resource "openstack_networking_port_v2" "okd-worker-port" {
+#  count          = var.number_of_workers
+#  name           = "okd-worker-port_${count.index}"
+#  network_id         = "${openstack_networking_network_v2.network_1.id}"
+#  admin_state_up = true
+#  no_fixed_ip    = true
+#  dns_name = "worker-${count.index+1}.okd.lab"
+#  security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
+#  depends_on = [
+#    openstack_networking_subnet_v2.subnet_1,
+#  ]
+#}
 
 resource "openstack_networking_port_v2" "okd-master-port" {
   count          = var.number_of_masters
@@ -120,6 +120,19 @@ resource "openstack_networking_port_v2" "okd-master-port" {
   depends_on = [
     openstack_networking_subnet_v2.subnet_1,
   ]
+}
+
+resource "openstack_compute_instance_v2" "master" {
+  name            = "master-${count.index+1}"
+  count           = var.number_of_masters
+  flavor_name     = "Basic-1-1-10"
+  key_pair        = openstack_compute_keypair_v2.ssh.name
+  config_drive    = true
+  image_name      = openstack_images_image_v2.fedoracore.name
+  security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
+  network {
+    port     = "${openstack_networking_port_v2.port.*.id[count.index]}"
+  }
 }
 
 
