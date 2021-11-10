@@ -131,7 +131,7 @@ resource "openstack_compute_instance_v2" "master" {
   image_name      = openstack_images_image_v2.fedoracore.name
   security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
   network {
-    port     = "${openstack_networking_port_v2.port.*.id[count.index]}"
+    port     = "${openstack_networking_port_v2.okd-master-port.*.id[count.index]}"
   }
 }
 
