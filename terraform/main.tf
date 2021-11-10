@@ -95,10 +95,11 @@ resource "openstack_networking_port_v2" "port" {
   admin_state_up     = "true"
   security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
 
-#  fixed_ip {
-#    subnet_id  = "${openstack_networking_subnet_v2.subnet_1.id}"
-#    ip_address = "192.168.199.10"
-#  }
+  fixed_ip {
+    count = "${var.number_of_workers + var.number_of_workers}" 
+    subnet_id  = "${openstack_networking_subnet_v2.subnet_1.id}"
+    ip_address = "${192.168.199.9 + 1}"  
+  }
 }
 
 
@@ -110,7 +111,7 @@ resource "openstack_networking_port_v2" "port" {
 #  image_id = openstack_images_image_v2.fedoracore.id
 #}
 
-resource "openstack_compute_instance_v2" "instance" {
+resource "openstack_compute_instance_v2" "worker" {
   name = "worker-${count.index+1}"
   count = var.number_of_workers
   flavor_name = "Basic-1-1-10"
@@ -132,6 +133,29 @@ resource "openstack_compute_instance_v2" "instance" {
 #  }
 }
 
+resource "openstack_compute_instance_v2" "master" {
+  name = "master-${count.index+1}"
+  count = var.number_of_masters
+  flavor_name = "Basic-1-1-10"
+  key_pair = openstack_compute_keypair_v2.ssh.name
+  config_drive = true
+  image_name = openstack_images_image_v2.fedoracore.name
+  security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
+
+  network {
+    port = "${element(openstack_networking_port_v2.port.*.id, count.index)}"
+  }
+  
+#  block_device {
+#    uuid = openstack_blockstorage_volume_v2.volume.id
+#    boot_index = 0
+#   source_type = "volume"
+#    destination_type = "volume"
+#    delete_on_termination = false
+#  }
+}
+
+
 output "path_debug" {
   value = "${path.module}/templates/hosts.tpl"
 }
@@ -141,7 +165,8 @@ output "path_debug" {
 resource "local_file" "hosts_cfg" {
    content = templatefile("${path.module}/templates/hosts.tpl",
     {
-      masters = openstack_compute_instance_v2.instance.*.access_ip_v4
+      masters = openstack_compute_instance_v2.master.*.access_ip_v4
+#	  workers = openstack_compute_instance_v2.worker.*.access_ip_v4
     }
   )
   filename = "hosts.cfg"
