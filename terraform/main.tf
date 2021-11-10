@@ -94,13 +94,8 @@ resource "openstack_networking_port_v2" "port" {
   network_id         = "${openstack_networking_network_v2.network_1.id}"
   admin_state_up     = "true"
   security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
-
-#  fixed_ip {
-#    count = "${var.number_of_workers + var.number_of_workers}" 
-#    subnet_id  = "${openstack_networking_subnet_v2.subnet_1.id}"
-#    ip_address = "192.168.199.${9 + 1}"  
-#  }
 }
+
 
 
 
@@ -143,16 +138,9 @@ resource "openstack_compute_instance_v2" "master" {
   security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
 
   network {
-    port = "${element(openstack_networking_port_v2.port.*.id, count.index)}"
+    port = "${openstack_networking_port_v2.port.*.id[count.index]}"
   }
-  
-#  block_device {
-#    uuid = openstack_blockstorage_volume_v2.volume.id
-#    boot_index = 0
-#   source_type = "volume"
-#    destination_type = "volume"
-#    delete_on_termination = false
-#  }
+
 }
 
 
