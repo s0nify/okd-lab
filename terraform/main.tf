@@ -57,8 +57,8 @@ resource "openstack_networking_port_v2" "port_1" {
   network_id     = "${openstack_networking_network_v2.okd-network.id}"
   admin_state_up = "true"
   fixed_ip {
-    subnet_id    = "${openstack_networking_subnetpool_v2.okd-subnetpool.id}"
-	}
+    subnet_id    = "${openstack_networking_subnetpool_v2.okd-subnet.id}"
+  }
 }
 
 #resource "openstack_compute_instance_v2" "master" {
