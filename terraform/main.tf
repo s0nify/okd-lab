@@ -74,3 +74,7 @@ resource "openstack_compute_instance_v2" "master" {
     name = "${openstack_networking_network_v2.okd-network.name}"
   }
 }
+
+output "path_debug" {
+  value = "${openstack_networking_port_v2.okd-network.master-1.id}"
+}
