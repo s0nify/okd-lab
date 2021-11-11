@@ -72,7 +72,7 @@ resource "openstack_compute_instance_v2" "master" {
 
   network {
     name = "${openstack_networking_network_v2.okd-network}"
-	# Выглядит как херня и работает как херня (наверно)
-	port = "${openstack_networking_port_v2.port_1.*[{count.index}]}"
+# Выглядит как херня и работает как херня (наверно)
+	port = "${openstack_networking_port_v2.port_1.*[count.index]}"
   }
 }
