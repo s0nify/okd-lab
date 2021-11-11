@@ -47,6 +47,7 @@ resource "openstack_networking_subnetpool_v2" "okd-subnetpool" {
 resource "openstack_networking_subnet_v2" "okd-subnet" {
   name          = "subnet_1"
   cidr          = "192.168.199.0/24"
+  enable_dhcp	= "true"
   network_id    = "${openstack_networking_network_v2.okd-network.id}"
   subnetpool_id = "${openstack_networking_subnetpool_v2.okd-subnetpool.id}"
 }
@@ -54,21 +55,23 @@ resource "openstack_networking_subnet_v2" "okd-subnet" {
 resource "openstack_networking_port_v2" "port_1" {
   count          = 5
   name           = "master-${count.index+1}"
+  dns_name		 = "master-${count.index+1}.okd.lab"
   network_id     = "${openstack_networking_network_v2.okd-network.id}"
   admin_state_up = "true"
   fixed_ip {
-    subnet_id    = "${openstack_networking_subnet_v2.okd-subnet.id}"
+    subnet_id    = "${openstack_networking_subnet_v2.okd-subnet.name}"
   }
 }
 
-#resource "openstack_compute_instance_v2" "master" {
-#  name            = "master-${count.index+1}"
-#  count           = var.number_of_masters
-#  flavor_name     = "Basic-1-1-10"
-#  config_drive    = true
-#  image_id = "cd733849-4922-4104-a280-9ea2c3145417"
+resource "openstack_compute_instance_v2" "master" {
+  name            = "master-${count.index+1}"
+  count           = var.number_of_masters
+  flavor_name     = "Basic-1-1-10"
+  config_drive    = true
+  image_id = "cd733849-4922-4104-a280-9ea2c3145417"
 
-#  network {
-#    name = "${openstack_networking_network_v2.okd-network.name}"
-#  }
-#}
+  network {
+    name = "${openstack_networking_network_v2.okd-network.master-${count.index+1}}"
+	port = "${openstack_networking_port_v2.master-${count.index+1}}"
+  }
+}
