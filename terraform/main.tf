@@ -72,10 +72,6 @@ resource "openstack_compute_instance_v2" "master" {
 
   network {
     name = "${openstack_networking_network_v2.okd-network.name}"
-	port = "master-${count.index+1}"
+	port = "${openstack_networking_port_v2.port_1.*.name}"
   }
 }
-
-#output "path_debug1" {
-#  value = "${openstack_networking_port_v2.port_1.*.name.map["keyname"]}"
-#}
