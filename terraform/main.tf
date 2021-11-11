@@ -52,16 +52,16 @@ resource "openstack_networking_subnet_v2" "okd-subnet" {
   subnetpool_id = "${openstack_networking_subnetpool_v2.okd-subnetpool.id}"
 }
 
-resource "openstack_networking_port_v2" "port_1" {
-  count          = 5
-  name           = "master-${count.index+1}"
-  dns_name		 = "master-${count.index+1}.okd.lab"
-  network_id     = "${openstack_networking_network_v2.okd-network.id}"
-  admin_state_up = "true"
-  fixed_ip {
-    subnet_id    = "${openstack_networking_subnet_v2.okd-subnet.name}"
-  }
-}
+#resource "openstack_networking_port_v2" "port_1" {
+#  count          = 5
+#  name           = "master-${count.index+1}"
+#  dns_name		 = "master-${count.index+1}.okd.lab"
+#  network_id     = "${openstack_networking_network_v2.okd-network.id}"
+# admin_state_up = "true"
+# fixed_ip {
+#    subnet_id    = "${openstack_networking_subnet_v2.okd-subnet.name}"
+#  }
+#}
 
 resource "openstack_compute_instance_v2" "master" {
   name            = "master-${count.index+1}"
@@ -72,6 +72,5 @@ resource "openstack_compute_instance_v2" "master" {
 
   network {
     name = "${openstack_networking_network_v2.okd-network.name}"
-	port = "${openstack_networking_port_v2.port_1.*.name}"
   }
 }
