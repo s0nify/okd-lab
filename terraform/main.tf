@@ -75,6 +75,6 @@ resource "openstack_compute_instance_v2" "master" {
   }
 }
 
-output "path_debug" {
+output "debugme" {
   value = "${openstack_networking_port_v2.port_1.*.name}"
 }
