@@ -71,7 +71,7 @@ resource "openstack_compute_instance_v2" "master" {
   image_id = "cd733849-4922-4104-a280-9ea2c3145417"
 
   network {
-    name = "${openstack_networking_network_v2.okd-network}"
+    name = "${openstack_networking_network_v2.okd-network.name}"
   }
 }
 
