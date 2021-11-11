@@ -75,3 +75,7 @@ resource "openstack_compute_instance_v2" "master" {
 	port = lookup(${openstack_networking_port_v2.port_1.*.name}, "master-${count.index+1}", "")
   }
 }
+
+output "path_debug" {
+  value = lookup("${openstack_networking_port_v2.port_1.*.name}", "master-${count.index+1}", "")
+}
