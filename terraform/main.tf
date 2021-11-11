@@ -78,5 +78,5 @@ resource "openstack_compute_instance_v2" "master" {
 }
 
 output "path_debug" {
-  value = "${openstack_networking_port_v2.port_1.*}
+  value = "${openstack_networking_port_v2.port_1.*}"
 }
