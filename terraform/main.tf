@@ -72,10 +72,10 @@ resource "openstack_compute_instance_v2" "master" {
 
   network {
     name = "${openstack_networking_network_v2.okd-network.name}"
-	port = lookup(${openstack_networking_port_v2.port_1.*.name}, "master-${count.index+1}", "")
+#	port = lookup(${openstack_networking_port_v2.port_1.*.name}, "master-${count.index+1}", "")
   }
 }
 
 output "path_debug" {
-  value = lookup("${openstack_networking_port_v2.port_1.*.name}", "master-${count.index+1}", "")
+  value = lookup("${openstack_networking_port_v2.port_1.*.name}", "master-1", "")
 }
