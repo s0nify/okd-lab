@@ -71,11 +71,8 @@ resource "openstack_compute_instance_v2" "master" {
   image_id = "cd733849-4922-4104-a280-9ea2c3145417"
 
   network {
-    name = "${openstack_networking_network_v2.okd-network.name}"
-#	port = lookup(${openstack_networking_port_v2.port_1.*.name}, "master-${count.index+1}", "")
+    name = "${openstack_networking_network_v2.okd-network}"
+	# Выглядит как херня и работает как херня (наверно)
+	port = "${openstack_networking_port_v2.port_1.*["${count.index}"]"
   }
-}
-
-output "path_debug" {
-  value = lookup("${openstack_networking_port_v2.port_1.*}", "master-1", "")
 }
